@@ -12,7 +12,7 @@
             class="button-grid"
             large
           >
-            {{ button.label }}
+            {{ button.displayText || 'Unassigned' }}
           </v-btn>
         </v-col>
       </v-row>
@@ -43,27 +43,29 @@
   <script lang="ts">
   import { defineComponent } from 'vue';
   import axios from 'axios';
+  import { useEventsBus } from '../useEventBus.js';
   
   interface Button {
     id: number;
     label: string;
     file: string | null;
+    displayText: string | null;
   }
   
   export default defineComponent({
     data() {
       return {
         buttons: [
-          { id: 1, label: 'Unassigned', file: null },
-          { id: 2, label: 'Unassigned', file: null },
-          { id: 3, label: 'Unassigned', file: null },
-          { id: 4, label: 'Unassigned', file: null },
-          { id: 5, label: 'Unassigned', file: null },
-          { id: 6, label: 'Unassigned', file: null },
-          { id: 7, label: 'Unassigned', file: null },
-          { id: 8, label: 'Unassigned', file: null },
-          { id: 9, label: 'Unassigned', file: null },
-          { id: 10, label: 'Unassigned', file: null },
+          { id: 5, label: 'Unassigned', file: null, displayText: '' },
+          { id: 6, label: 'Unassigned', file: null, displayText: '' },
+          { id: 7, label: 'Unassigned', file: null, displayText: '' },
+          { id: 8, label: 'Unassigned', file: null, displayText: '' },
+          { id: 9, label: 'Unassigned', file: null, displayText: '' },
+          { id: 10, label: 'Unassigned', file: null, displayText: '' },
+          { id: 11, label: 'Unassigned', file: null, displayText: '' },
+          { id: 12, label: 'Unassigned', file: null, displayText: '' },
+          { id: 13, label: 'Unassigned', file: null, displayText: '' },
+          { id: 14, label: 'Unassigned', file: null, displayText: '' },
         ] as Button[],
         dialog: false,
         files: [] as string[],
@@ -77,8 +79,7 @@
           await this.fetchFiles();
           this.dialog = true;
         } else {
-          console.log(`Playing ${button.file}`);
-          // Implement the logic to play the file
+            useEventsBus().emit('select-song', { clickedBtn: button, buttons: this.buttons});
         }
       },
       async fetchFiles() {
@@ -91,14 +92,19 @@
       },
       selectFile(file: string) {
         if (this.currentButton) {
+          const displayText = prompt('Enter a short display text for the song:');
           this.currentButton.label = file;
           this.currentButton.file = `/music/${file}`;
+          this.currentButton.displayText = displayText;
           this.dialog = false;
+          useEventsBus().emit('set-song', { clickedBtn: this.currentButton, buttons: this.buttons});
         }
       },
       clearButton(button: Button) {
         button.label = 'Unassigned';
         button.file = null;
+        button.displayText = '';
+        useEventsBus().emit('set-song', { clickedBtn: this.currentButton, buttons: this.buttons});
       },
     },
   });

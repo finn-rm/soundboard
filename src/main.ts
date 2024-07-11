@@ -4,10 +4,6 @@ import vuetify from './plugins/vuetify';
 import { requestStreamDecks, getStreamDecks, StreamDeckWeb as BaseStreamDeckWeb, LcdPosition } from '@elgato-stream-deck/webhid';
 import jpegJS from 'jpeg-js'
 import axios from 'axios';
-import mitt from 'mitt';
-
-const emitter = mitt();
-App.config.globalProperties.emitter = emitter;
 
 createApp(App)
   .use(vuetify)
