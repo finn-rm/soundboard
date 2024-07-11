@@ -4,10 +4,11 @@
         <v-col
           v-for="button in buttons"
           :key="button.id"
-          cols="2.1"
+          cols="3"
         >
           <v-btn
             @click="handleButtonClick(button)"
+            @contextmenu.prevent="clearButton(button)"
             class="button-grid"
             large
           >
@@ -95,13 +96,16 @@
           this.dialog = false;
         }
       },
+      clearButton(button: Button) {
+        button.label = 'Unassigned';
+        button.file = null;
+      },
     },
   });
   </script>
   
   <style scoped>
   .button-grid {
-    width: 100%;
     height: 100px; /* Adjust height as needed */
   }
   </style>

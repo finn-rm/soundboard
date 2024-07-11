@@ -7,6 +7,8 @@ const app = express();
 
 app.use(fileUpload());
 
+app.use('/music', express.static(path.join(__dirname, 'music')));
+
 app.post('/upload', (req, res) => {
   if (!req.files || Object.keys(req.files).length === 0) {
     return res.status(400).send('No files were uploaded.');
